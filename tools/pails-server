@@ -12,19 +12,28 @@ if [ -f vendor/pails/pails/router.php ]; then
 	ROUTER_BASE=vendor/pails/pails
 elif [ -f lib/pails/router.php ]; then
 	ROUTER_BASE=lib/pails
+elif [ -f ../vendor/pails/pails/router.php ]; then
+    ROUTER_BASE=../vendor/pails/pails
 else
 	echo 'This is not a pails app!!'
 	exit 1
 fi
 
 # FIGURE OUT WHICH RUNTIME COMMAND TO USE
-HHVM="hhvm -m server -p 8000 -dhhvm.server.default_document=$ROUTER_BASE/index.php -dhhvm.server.error_document404=$ROUTER_BASE/index.php"
+HHVM="hhvm -m server -p 8000 -dhhvm.server.default_document=./index.php -dhhvm.server.error_document404=./index.php"
 PHP="php -S $IP:8000 $ROUTER_BASE/router.php"
 
 EXE=$PHP
 if [ -x "`which hhvm`" ]; then # if hhvm exists, assume we want to use it...
-    echo "Using HHVM on port 8000..."
-    EXE=$HHVM
+    if [ -e "index.php" ]; then
+        echo "Using HHVM on port 8000..."
+        EXE=$HHVM
+    else
+        echo "HHVM needs a symlink from index.php to the real index.php."
+        echo "You can create it by running"
+        echo "    ln -s ../vendor/pails/pails/index.php"
+        EXE=$PHP
+    fi
 else
     PHP_VERSION=$(php --version | head -1 | cut -f 2 -d ' ')
     PHP_MAJOR=$(echo $PHP_VERSION | cut -d . -f 1)
