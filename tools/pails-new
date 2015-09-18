@@ -35,7 +35,6 @@ sed -E -i .old "s:APP_NAME = '':APP_NAME = '${APP_NAME}':" application.php
 rm *.old
 popd > /dev/null
 
-
-mkdir $APP_DIR/lib/pails
-cp -r $TOOLS_DIR/../*.php $APP_DIR/lib/pails/
-cp -r $TOOLS_DIR/../lib $APP_DIR/lib/pails/
+echo "New pails app skeleton has been created in $APP_DIR"
+echo "To update dependencies, run"
+echo "    composer install"

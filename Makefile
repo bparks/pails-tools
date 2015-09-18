@@ -6,7 +6,7 @@ all :
 
 install :
 	mkdir -p $(LIBPREFIX)/pails
-	cp -rp README.md VERSION default index.php lib router.php tools $(LIBPREFIX)/pails/
+	cp -rp VERSION default tools $(LIBPREFIX)/pails/
 	ln -sf $(LIBPREFIX)/pails/tools/pails $(PREFIX)/bin/pails
 
 uninstall :

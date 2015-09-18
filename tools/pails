@@ -38,17 +38,11 @@ case $COMMAND in
     'n'|'ne'|'new'|'create')
         $TOOLS_DIR/pails-new $@
         ;;
-    'u'|'up'|'upd'|'upda'|'updat'|'update')
-        $TOOLS_DIR/pails-update $@
-        ;;
     's'|'se'|'ser'|'serv'|'serve'|'server')
         $TOOLS_DIR/pails-server $@
         ;;
     'c'|'co'|'con'|'cons'|'conso'|'consol'|'console')
         $TOOLS_DIR/pails-console $@
-        ;;
-    'i'|'in'|'ins'|'inst'|'insta'|'instal'|'install'|'add')
-        $TOOLS_DIR/pails-install $@
         ;;
     'migration')
         $TOOLS_DIR/pails-migration $@
