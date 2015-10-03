@@ -6,7 +6,7 @@ all :
 
 install :
 	mkdir -p $(LIBPREFIX)/pails
-	cp -rp VERSION default tools $(LIBPREFIX)/pails/
+	cp -RPp VERSION tools $(LIBPREFIX)/pails/
 	ln -sf $(LIBPREFIX)/pails/tools/pails $(PREFIX)/bin/pails
 
 uninstall :

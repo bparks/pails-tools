@@ -4,7 +4,7 @@ TOOLS_DIR=`dirname $0`
 
 APP_DIR=.
 
-if [ ! -e config/application.php ]; then
+if [ ! -e app/config/application.php ]; then
   echo "This is not a pails app"
   exit 1
 fi
@@ -25,9 +25,9 @@ fi
 #First, let's see if we need to create the table
 php <<EOT
 <?php
-include('config/application.php');
-include('vendor/autoload.php');
+include('app/config/application.php');
 date_default_timezone_set('UTC');
+include('vendor/autoload.php');
 class MigrationHistory extends ActiveRecord\\Model {}
 ActiveRecord\\Config::initialize(function(\$cfg) use (\$CONNECTION_STRINGS)
 {
@@ -53,9 +53,9 @@ for file in db/migrations/*.sql ; do
 
   MIGRATED_DATE=$(php <<EOT
 <?php
-  include('config/application.php');
-  include('vendor/autoload.php');
+  include('app/config/application.php');
   date_default_timezone_set('UTC');
+  include('vendor/autoload.php');
   class MigrationHistory extends ActiveRecord\\Model {}
   ActiveRecord\Config::initialize(function(\$cfg) use (\$CONNECTION_STRINGS)
   {
@@ -78,9 +78,9 @@ EOT)
 
     php <<EOT
     <?php
-    include('config/application.php');
-    include('vendor/autoload.php');
+    include('app/config/application.php');
     date_default_timezone_set('UTC');
+    include('vendor/autoload.php');
     class MigrationHistory extends ActiveRecord\\Model {}
     ActiveRecord\\Config::initialize(function(\$cfg) use (\$CONNECTION_STRINGS)
     {
