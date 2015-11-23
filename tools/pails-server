@@ -1,10 +1,24 @@
 #!/bin/bash
 
+RUNTIME=
 # HANDLE OPTIONS
 IP=127.0.0.1
-if [ $# -gt 0 -a "$1" = "--all" ]; then
-    IP=0.0.0.0
-fi
+while (( $# )); do
+    case $1 in
+        --all)
+            IP=0.0.0.0
+            ;;
+        --hhvm)
+            [ -z "$RUNTIME" ] || echo "Multiple runtimes specified. Last one wins!"
+            RUNTIME="hhvm"
+            ;;
+        --php)
+            [ -z "$RUNTIME" ] || echo "Multiple runtimes specified. Last one wins!"
+            RUNTIME="php"
+            ;;
+    esac
+    shift
+done
 
 # DETERMINE WHERE THE PAILS BOOTSTRAPPER LIVES
 ROUTER_BASE=
@@ -23,25 +37,34 @@ fi
 HHVM="hhvm -m server -p 8000 -dhhvm.server.default_document=./index.php -dhhvm.server.error_document404=./index.php"
 PHP="php -S $IP:8000 $ROUTER_BASE/router.php"
 
-EXE=$PHP
-if [ -x "`which hhvm`" ]; then # if hhvm exists, assume we want to use it...
-    if [ -e "index.php" ]; then
-        echo "Using HHVM on port 8000..."
-        EXE=$HHVM
+EXE=
+if [ -z "$RUNTIME" ]; then
+    if [ -x "`which hhvm`" ]; then # if hhvm exists, assume we want to use it...
+        if [ -e "index.php" ]; then
+            echo "Using HHVM on port 8000..."
+            EXE=$HHVM
+        else
+            echo "HHVM needs a symlink from index.php to the real index.php."
+            echo "You can create it by running"
+            echo "    ln -s ../vendor/pails/pails/index.php"
+            EXE=$PHP
+        fi
     else
-        echo "HHVM needs a symlink from index.php to the real index.php."
-        echo "You can create it by running"
-        echo "    ln -s ../vendor/pails/pails/index.php"
+        PHP_VERSION=$(php --version | head -1 | cut -f 2 -d ' ')
+        PHP_MAJOR=$(echo $PHP_VERSION | cut -d . -f 1)
+        PHP_MINOR=$(echo $PHP_VERSION | cut -d . -f 2)
+
+        if [ $PHP_MAJOR -lt 5 ] || ([ $PHP_MAJOR -eq 5 ] && [ $PHP_MINOR -lt 4 ]) ; then
+        	echo 'PHP version 5.4 or later is required to run the development server'
+        	exit 1
+        fi
         EXE=$PHP
     fi
 else
-    PHP_VERSION=$(php --version | head -1 | cut -f 2 -d ' ')
-    PHP_MAJOR=$(echo $PHP_VERSION | cut -d . -f 1)
-    PHP_MINOR=$(echo $PHP_VERSION | cut -d . -f 2)
-    
-    if [ $PHP_MAJOR -lt 5 ] || ([ $PHP_MAJOR -eq 5 ] && [ $PHP_MINOR -lt 4 ]) ; then
-    	echo 'PHP version 5.4 or later is required to run the development server'
-    	exit 1
+    if [ "$RUNTIME" = "hhvm" ]; then
+        EXE=$HHVM
+    else
+        EXE=$PHP
     fi
 fi
 
