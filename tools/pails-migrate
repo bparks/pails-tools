@@ -9,9 +9,9 @@ if [ ! -e app/config/application.php ]; then
   exit 1
 fi
 
-if [ ! -e vendor/php-activerecord/php-activerecord ]; then
-  echo "php-activerecord is required. Install it by running"
-  echo "    composer require php-activerecord/php-activerecord"
+if [ ! -e vendor/pails/activerecord ]; then
+  echo "pails-activerecord is required. Install it by running"
+  echo "    composer require pails/activerecord"
   echo "However, if you're not using activerecord, you likely don't have any"
   echo "migrations to be run"
   exit 1
