@@ -79,6 +79,8 @@ EOT
     date_default_timezone_set('UTC');
     include('vendor/autoload.php');
     class MigrationHistory extends ActiveRecord\\Model {}
+    // Fix for 'Invalid datetime format'
+    ActiveRecord\\Connection::\$datetime_format = 'Y-m-d H:i:s'
     ActiveRecord\\Config::initialize(function(\$cfg) use (\$CONNECTION_STRINGS)
     {
       \$cfg->set_connections(\$CONNECTION_STRINGS);
